@@ -8,7 +8,7 @@ pluginManagement {
 
 plugins {
     java
-    id("fabric-loom") version "1.1"
+    id("fabric-loom") version "1.14-SNAPSHOT"
     `maven-publish`
 }
 
