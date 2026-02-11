@@ -1,15 +1,15 @@
-plugins {
-    java
-    id("fabric-loom") version "1.1"
-    `maven-publish`
-}
-
 pluginManagement {
     repositories {
         mavenLocal()
         maven { url = uri("https://maven.fabricmc.net/") }
         gradlePluginPortal()
     }
+}
+
+plugins {
+    java
+    id("fabric-loom") version "1.1"
+    `maven-publish`
 }
 
 base {
