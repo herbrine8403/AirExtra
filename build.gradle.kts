@@ -5,6 +5,27 @@ plugins {
     `maven-publish`
 }
 
+base {
+    archivesName = "AirExtra"
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/airextra.accesswidener")
+}
+
+repositories {
+    mavenLocal()
+    maven { url = uri("https://maven.fabricmc.net/") }
+    mavenCentral()
+}
+
+dependencies {
+    minecraft("com.mojang:minecraft:1.21.11")
+    mappings("net.fabricmc:yarn:1.21.11+build.4:v2")
+    modImplementation("net.fabricmc:fabric-loader:0.15.11")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.100.1+1.21.11")
+}
+
 version = "1.0.0"
 group = "com.airextra"
 
