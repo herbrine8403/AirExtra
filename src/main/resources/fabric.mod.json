@@ -1,1 +1,29 @@
-{"schemaVersion": 1, "id": "airextra", "version": "${version}", "name": "AirExtra", "description": "专为iOS设备（尤其是Amethyst iOS Remastered启动器的Air++整合包）设计的Fabric Mod，提供多项iOS优化和警告功能。", "authors": ["Drwei"], "contact": {"email": "weishixvn@outlook.com"}, "license": "MIT", "environment": "client", "entrypoints": {"client": ["com.herbrine8403.airextra.AirExtra"]}, "mixins": ["airextra.mixins.json"], "depends": {"fabricloader": ">=0.16.9", "minecraft": "~1.21.11", "fabric-api": "*"}, "conflicts": {"touchcontroller": {"message": "TouchController检测将在游戏中进行，无需担心此冲突"}}}
+{
+  "schemaVersion": 1,
+  "id": "airextra",
+  "version": "1.0.0",
+  "name": "AirExtra",
+  "description": "A Minecraft mod for iOS devices, especially designed for Amethyst iOS Remastered launcher's Air++ pack",
+  "authors": [
+    "herbrine8403"
+  ],
+  "contact": {
+    "email": "weishixvn@outlook.com"
+  },
+  "license": "MIT",
+  "icon": "assets/airextra/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.airextra.AirExtra"
+    ]
+  },
+  "mixins": [
+    "airextra.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "1.21.11",
+    "java": ">=21"
+  }
+}
