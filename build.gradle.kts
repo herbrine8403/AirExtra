@@ -31,6 +31,34 @@ tasks.processResources {
 }
 
 tasks.withType<JavaCompile> {
+    options.release.set(17)
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+dependencies {
+    minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
+    mappings("net.fabricmc:yarn:${project.property("yarn_mappings")}:v2")
+    modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
+
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
+    
+    // OSHI - System hardware detection
+    implementation("com.github.oshi:oshi-core:6.6.0")
+}
+
+tasks.processResources {
+    inputs.property("version", project.version)
+    filesMatching("fabric.mod.json") {
+        expand(mapOf("version" to project.version))
+    }
+}
+
+tasks.withType<JavaCompile> {
     options.release.set(21)
 }
 
