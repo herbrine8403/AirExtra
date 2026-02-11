@@ -1,5 +1,5 @@
 plugins {
-    id("fabric-loom") version "1.6.9"
+    id("fabric-loom") version "1.7.4"
     id("maven-publish")
 }
 
@@ -30,11 +30,11 @@ tasks.processResources {
 }
 
 tasks.withType<JavaCompile> {
-    options.release.set(17)
+    options.release.set(21)
 }
 
 java {
     withSourcesJar()
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
