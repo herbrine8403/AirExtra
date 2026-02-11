@@ -1,8 +1,15 @@
 plugins {
-    id("multiloader-base")
     java
     id("fabric-loom") version "1.13.4"
     `maven-publish`
+}
+
+pluginManagement {
+    repositories {
+        mavenLocal()
+        maven { url = uri("https://maven.fabricmc.net/") }
+        gradlePluginPortal()
+    }
 }
 
 base {
