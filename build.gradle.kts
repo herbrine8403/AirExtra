@@ -1,6 +1,6 @@
 plugins {
     java
-    id("fabric-loom") version "1.4.8"
+    id("fabric-loom") version "1.15"
     `maven-publish`
 }
 
