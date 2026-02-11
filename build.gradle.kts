@@ -1,6 +1,22 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        maven { url = uri("https://maven.fabricmc.net/") }
+        maven { url = uri("https://server.bbkr.space/artifactory/libs-release/") }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        // 将 fabric-loom 作为 classpath 依赖来加载（如果需要其它版本，请修改此处）
+        classpath("net.fabricmc:fabric-loom:1.3")
+    }
+}
+
+// 通过 buildscript classpath 加载后以 apply 方式使用插件（避免 plugins {} 解析失败）
+apply(plugin = "fabric-loom")
+
 plugins {
     java
-    id("fabric-loom") version "1.3"
     `maven-publish`
 }
 
@@ -41,6 +57,6 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${base.archivesName.get()}" }
+        rename { "${it}_${base.archivesName.get()}"}
     }
 }
