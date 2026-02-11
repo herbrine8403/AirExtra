@@ -25,7 +25,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: |
         chmod +x gradlew
-        echo "Using gradlew wrapper"
+        echo "gradlew wrapper ready"
     
     - name: Build with Gradle
       run: ./gradlew build

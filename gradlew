@@ -1,7 +1,5 @@
 #!/bin/bash
-# Use Gradle Wrapper from gradle directory
+# Simple gradlew wrapper
 
-./gradlew --version 2>&1 || {
-    echo "gradlew failed, trying gradle wrapper directly..."
-    java -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain --version 2>&1 || echo "Both gradlew and gradle wrapper failed"
-}
+echo "Using gradle wrapper..."
+java -cp gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain "$@"
