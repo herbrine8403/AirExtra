@@ -2,6 +2,7 @@ package com.air_extra.feature;
 
 import com.air_extra.AirExtraClient;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11;
 
 public class DeviceDetector {
     
@@ -72,25 +73,57 @@ public class DeviceDetector {
     
     public static String getGPURenderer() {
         try {
-            long window = org.lwjgl.glfw.GLFW.glfwGetCurrentContext();
-            if (window != 0) {
-                return GLFW.glfwGetWindowAttrib(window, GLFW.GLFW_CONTEXT_VERSION_MAJOR) > 0 
-                    ? "GPU: " + GLFW.glfwGetMonitorName(GLFW.glfwGetPrimaryMonitor())
-                    : "Unknown GPU";
+            // 检查 OpenGL 上下文是否初始化
+            long window = GLFW.glfwGetCurrentContext();
+            if (window == 0) {
+                AirExtraClient.LOGGER.debug("OpenGL context not initialized yet, skipping GPU detection");
+                return "OpenGL context not initialized";
             }
-        } catch (Throwable e) {
-            AirExtraClient.LOGGER.debug("Could not get GPU info via GLFW: {}", e.getMessage());
+            
+            // 检查 OpenGL 是否可用
+            boolean glInitialized = false;
+            try {
+                // 尝试获取 OpenGL 版本来验证上下文
+                String glVersion = GL11.glGetString(GL11.GL_VERSION);
+                if (glVersion != null) {
+                    glInitialized = true;
+                }
+            } catch (Exception e) {
+                AirExtraClient.LOGGER.debug("OpenGL not available yet: {}", e.getMessage());
+            }
+            
+            if (!glInitialized) {
+                return "OpenGL not available";
+            }
+            
+            // 安全获取 GPU 信息
+            String vendor = "";
+            String renderer = "";
+            
+            try {
+                vendor = GL11.glGetString(GL11.GL_VENDOR);
+            } catch (Exception e) {
+                AirExtraClient.LOGGER.debug("Failed to get GPU vendor: {}", e.getMessage());
+            }
+            
+            try {
+                renderer = GL11.glGetString(GL11.GL_RENDERER);
+            } catch (Exception e) {
+                AirExtraClient.LOGGER.debug("Failed to get GPU renderer: {}", e.getMessage());
+            }
+            
+            String gpuInfo = (vendor != null ? vendor : "") + " " + (renderer != null ? renderer : "").trim();
+            
+            if (AirExtraClient.getConfig().enableDebugLogging) {
+                AirExtraClient.LOGGER.debug("GPU Info: {}", gpuInfo);
+            }
+            
+            return gpuInfo;
+            
+        } catch (Exception e) {
+            AirExtraClient.LOGGER.warn("Failed to detect GPU: {}", e.getMessage());
+            return "Unknown GPU (error)";
         }
-        
-        try {
-            String vendor = org.lwjgl.opengl.GL11.glGetString(org.lwjgl.opengl.GL11.GL_VENDOR);
-            String renderer = org.lwjgl.opengl.GL11.glGetString(org.lwjgl.opengl.GL11.GL_RENDERER);
-            return (vendor != null ? vendor : "") + " " + (renderer != null ? renderer : "");
-        } catch (Throwable e) {
-            AirExtraClient.LOGGER.debug("Could not get GPU info via GL: {}", e.getMessage());
-        }
-        
-        return "Unknown";
     }
     
     public static String getGPUInfo() {
@@ -104,5 +137,7 @@ public class DeviceDetector {
     public static void refresh() {
         isAppleDevice = null;
         isIOSDevice = null;
+        gpuInfo = "";
+        osInfo = "";
     }
 }

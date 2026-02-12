@@ -1,10 +1,10 @@
 package com.air_extra;
 
 import com.air_extra.config.AirExtraConfig;
+import com.air_extra.event.TickListener;
 import com.air_extra.feature.*;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,95 +13,82 @@ public class AirExtraClient implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     
     private static AirExtraConfig config;
-    private static boolean isFirstLaunch = false;
     private static boolean modEnabled = true;
     private static boolean hasCheckedDevice = false;
-    private static int tickCounter = 0;
-    private static int memoryCheckInterval = 200;
-    private static UDPListener udpListener;
     
     @Override
     public void onInitializeClient() {
+        LOGGER.info("Initializing AirExtra Client...");
+        
+        // 加载配置
         config = AirExtraConfig.load();
         
-        if (!config.hasBeenInitialized()) {
-            isFirstLaunch = true;
-            checkDeviceAndEnableMod();
-            config.setInitialized(true);
-            config.save();
-        } else {
-            modEnabled = config.isModEnabled();
-        }
+        // 检查是否启用
+        modEnabled = config.isModEnabled();
         
         if (!modEnabled) {
-            LOGGER.info("AirExtra is disabled by config.");
+            LOGGER.info("AirExtra is disabled by config");
             return;
         }
         
-        LOGGER.info("AirExtra initialized for iOS device optimization!");
+        LOGGER.info("AirExtra Client initialized");
         
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (!modEnabled || client.world == null) return;
+        // 注册事件监听器
+        registerEventListeners();
+        
+        // 注册生命周期事件
+        ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
+            LOGGER.info("Minecraft client started, scheduling device detection...");
             
-            tickCounter++;
-            
-            if (tickCounter % memoryCheckInterval == 0) {
-                MemoryMonitor.checkMemory(client, config);
-            }
-            
-            if (!hasCheckedDevice) {
-                hasCheckedDevice = true;
-                performInitialChecks(client);
-            }
+            // 延迟设备检测，确保游戏完全启动
+            new Thread(() -> {
+                try {
+                    Thread.sleep(2000); // 延迟 2 秒
+                    performDeviceDetection(client);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }, "AirExtra-Device-Detector").start();
         });
     }
     
-    private void checkDeviceAndEnableMod() {
+    private void registerEventListeners() {
+        // 注册 tick 监听器
+        TickListener.register();
+    }
+    
+    private void performDeviceDetection(net.minecraft.client.MinecraftClient client) {
+        if (!modEnabled || hasCheckedDevice) return;
+        
+        hasCheckedDevice = true;
+        
+        // 检查设备
         boolean isAppleDevice = DeviceDetector.isAppleDevice();
         boolean isIOSDevice = DeviceDetector.isIOSDevice();
         
-        if (isAppleDevice || isIOSDevice) {
-            modEnabled = true;
-            LOGGER.info("Apple/iOS device detected. AirExtra enabled automatically.");
-        } else {
-            modEnabled = config.isModEnabled();
-            LOGGER.info("Non-Apple device detected. AirExtra status: {}", modEnabled);
-        }
+        LOGGER.info("Device detection completed: Apple={}, iOS={}", isAppleDevice, isIOSDevice);
+        
+        // 启动监控
+        startMonitoring(client);
     }
     
-    private void performInitialChecks(net.minecraft.client.MinecraftClient client) {
-        if (config.isEnableRendererCheck()) {
-            RendererDetector.checkRenderer(client, config);
-        }
+    private void startMonitoring(net.minecraft.client.MinecraftClient client) {
+        // 启动 UDP 监听
+        UDPListener.start(client, config);
         
-        if (config.isEnablePortraitCheck()) {
-            ScreenOrientationDetector.checkOrientation(client, config);
-        }
+        // 启动内存监控
+        MemoryMonitor.start(client, config);
         
-        if (config.isEnableMemoryAllocationCheck()) {
-            MemoryMonitor.checkMemoryAllocation(client, config);
-        }
+        // 启动性能监控
+        PerformanceMonitor.startMonitoring(client, config);
         
-        if (config.isEnableUDPListener()) {
-            startUDPListener();
-        }
+        // 启动屏幕方向监控
+        ScreenOrientationDetector.startMonitoring(client, config);
         
-        if (config.isEnableTouchOptimization()) {
-            TouchOptimizer.initialize(client, config);
-        }
+        // 检查内存分配
+        MemoryMonitor.checkMemoryAllocation(client, config);
         
-        if (config.isEnablePerformanceMonitor()) {
-            PerformanceMonitor.startMonitoring(client, config);
-        }
-        
-        if (config.isEnableMemoryWarning()) {
-            MemoryMonitor.startMemoryWarning(client, config);
-        }
-    }
-    
-    private void startUDPListener() {
-        udpListener = new UDPListener(config);
-        udpListener.start();
+        LOGGER.info("All monitoring systems started");
     }
     
     public static AirExtraConfig getConfig() {
@@ -110,15 +97,5 @@ public class AirExtraClient implements ClientModInitializer {
     
     public static boolean isModEnabled() {
         return modEnabled;
-    }
-    
-    public static void setModEnabled(boolean enabled) {
-        modEnabled = enabled;
-        config.setModEnabled(enabled);
-        config.save();
-    }
-    
-    public static void resetTickCounter() {
-        tickCounter = 0;
     }
 }

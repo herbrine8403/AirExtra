@@ -5,11 +5,18 @@ import com.air_extra.config.AirExtraConfig;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;
 
-import java.nio.IntBuffer;
-
 public class ScreenOrientationDetector {
     
     private static Boolean isPortraitMode = null;
+    
+    public static void startMonitoring(MinecraftClient client, AirExtraConfig config) {
+        if (!config.isEnablePortraitCheck()) return;
+        
+        AirExtraClient.LOGGER.info("Screen orientation monitor started");
+        
+        // 立即检查一次
+        checkOrientation(client, config);
+    }
     
     public static void checkOrientation(MinecraftClient client, AirExtraConfig config) {
         if (!config.isEnablePortraitCheck()) return;
@@ -23,15 +30,15 @@ public class ScreenOrientationDetector {
             isPortraitMode = height[0] > width[0];
             
             if (AirExtraClient.getConfig().enableDebugLogging) {
-                AirExtraClient.LOGGER.info("Screen Size: {}x{}, Portrait Mode: {}", width[0], height[0], isPortraitMode);
+                AirExtraClient.LOGGER.debug("Screen size: {}x{}, Portrait: {}", width[0], height[0], isPortraitMode);
             }
             
-            if (isPortraitMode) {
+            if (isPortraitMode && client.player != null) {
                 ToastHelper.showWarningToast(client, config.portraitWarningText);
             }
             
         } catch (Exception e) {
-            AirExtraClient.LOGGER.warn("Failed to check screen orientation: {}", e.getMessage());
+            AirExtraClient.LOGGER.warn("Screen orientation check failed: {}", e.getMessage());
         }
     }
     
