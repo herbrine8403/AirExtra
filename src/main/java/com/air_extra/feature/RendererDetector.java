@@ -70,12 +70,26 @@ public class RendererDetector {
         
         AirExtraClient.LOGGER.info("[RendererDetector] Starting renderer detection...");
         
-        // 检查 OpenGL 上下文是否可用
-        long window = GLFW.glfwGetCurrentContext();
-        AirExtraClient.LOGGER.debug("[RendererDetector] Current GLFW window context: {}", window);
+        // 尝试获取 Minecraft 窗口句柄
+        long windowHandle = 0;
+        try {
+            if (client.getWindow() != null) {
+                windowHandle = client.getWindow().getHandle();
+                AirExtraClient.LOGGER.debug("[RendererDetector] Minecraft window handle: {}", windowHandle);
+            }
+        } catch (Exception e) {
+            AirExtraClient.LOGGER.warn("[RendererDetector] Failed to get window handle: {}", e.getMessage());
+        }
         
-        if (window == 0) {
-            AirExtraClient.LOGGER.warn("[RendererDetector] No OpenGL context available (window=0), postponing check");
+        // 也检查 GLFW 当前上下文
+        long glfwContext = GLFW.glfwGetCurrentContext();
+        AirExtraClient.LOGGER.debug("[RendererDetector] GLFW current context: {}", glfwContext);
+        
+        // 使用 Minecraft 窗口或 GLFW 上下文
+        boolean hasValidContext = (windowHandle != 0) || (glfwContext != 0);
+        
+        if (!hasValidContext) {
+            AirExtraClient.LOGGER.warn("[RendererDetector] No valid OpenGL context available, postponing check");
             // 不标记为已检查，下次再尝试
             return;
         }
