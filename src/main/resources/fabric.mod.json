@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "air_extra",
+  "version": "${version}",
+  "name": "AirExtra",
+  "description": "A Fabric Mod designed for iOS devices, especially for Amethyst iOS Remastered launcher's 'Air++' modpack",
+  "authors": [
+    "herbrine8403"
+  ],
+  "contact": {
+    "homepage": "https://github.com/herbrine8403/AirExtra",
+    "sources": "https://github.com/herbrine8403/AirExtra"
+  },
+  "license": "MIT",
+  "icon": "assets/air_extra/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.air_extra.AirExtraClient"
+    ],
+    "modmenu": [
+      "com.air_extra.config.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "air_extra.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "minecraft": "~${minecraft_version}",
+    "java": ">=21",
+    "fabric-api": "*",
+    "cloth-config": "*"
+  },
+  "suggests": {
+    "modmenu": "*"
+  },
+  "accessWidener": "air_extra.accesswidener"
+}
