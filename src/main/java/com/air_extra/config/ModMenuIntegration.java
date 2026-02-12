@@ -8,10 +8,8 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 
 public class ModMenuIntegration implements ModMenuApi {
@@ -63,41 +61,28 @@ public class ModMenuIntegration implements ModMenuApi {
                 Text.literal(backupInfo))
             .build());
         
-        // 使用 SubCategory 添加恢复按钮区域
-        SubCategoryBuilder restoreSubCategory = entryBuilder.startSubCategory(Text.literal("恢复操作"));
-        restoreSubCategory.add(entryBuilder.startTextDescription(
-                Text.literal("§7点击下方按钮恢复优化前的游戏设置"))
+        // 添加恢复按钮（使用 BooleanToggle 作为伪按钮）
+        performanceCategory.addEntry(entryBuilder.startBooleanToggle(
+                Text.literal("恢复优化前设置"), 
+                false)
+            .setDefaultValue(false)
+            .setYesNoTextSupplier(value -> value ? Text.literal("§a已恢复") : Text.literal("§e点击恢复"))
+            .setSaveConsumer(value -> {
+                if (value && PerformanceMonitor.hasBackup()) {
+                    PerformanceMonitor.restoreSettings(MinecraftClient.getInstance());
+                }
+            })
+            .setTooltip(Text.literal("恢复自动优化前的游戏设置（视距、云、粒子）"))
             .build());
-        performanceCategory.addEntry(restoreSubCategory.build());
+        
+        // 使用说明
+        performanceCategory.addEntry(entryBuilder.startTextDescription(
+                Text.literal("§7提示：开启「恢复优化前设置」开关即可恢复备份的设置"))
+            .build());
         
         // 设置保存监听器
         builder.setSavingRunnable(() -> {
             config.save();
-        });
-        
-        // 在屏幕底部添加恢复按钮
-        builder.setAfterInitConsumer(screen -> {
-            // 添加恢复按钮到屏幕
-            int buttonWidth = 150;
-            int buttonHeight = 20;
-            int centerX = screen.width / 2 - buttonWidth / 2;
-            int buttonY = screen.height - 35;
-            
-            ButtonWidget restoreButton = ButtonWidget.builder(
-                Text.literal("§e[恢复优化前设置]"),
-                button -> {
-                    if (PerformanceMonitor.hasBackup()) {
-                        PerformanceMonitor.restoreSettings(MinecraftClient.getInstance());
-                    } else {
-                        // 如果没有备份，显示提示
-                        button.setMessage(Text.literal("§c[无可用备份]"));
-                    }
-                }
-            ).dimensions(centerX - 80, buttonY, buttonWidth, buttonHeight)
-             .tooltip(Text.literal("恢复自动优化前的游戏设置（视距、云、粒子）"))
-             .build();
-            
-            screen.addDrawableChild(restoreButton);
         });
         
         return builder.build();
