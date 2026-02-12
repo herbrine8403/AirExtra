@@ -86,6 +86,12 @@ public class AirExtraConfig implements ConfigData {
     @ConfigEntry.Category("performance")
     public String lowFPSText = "§e检测到FPS较低 (%d)，已自动优化部分设置。";
     
+    @ConfigEntry.Category("performance")
+    public boolean enableSettingsBackup = true;
+    
+    @ConfigEntry.Category("performance")
+    public String restoreSettingsText = "§a已恢复优化前的游戏设置。";
+    
     @ConfigEntry.Category("advanced")
     public boolean enableDebugLogging = false;
     
