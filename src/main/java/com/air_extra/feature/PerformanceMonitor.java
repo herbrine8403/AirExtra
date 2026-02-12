@@ -71,7 +71,6 @@ public class PerformanceMonitor {
                 
                 options.getCloudRenderMode().setValue(net.minecraft.client.option.CloudRenderMode.OFF);
                 options.getParticles().setValue(net.minecraft.client.option.ParticlesMode.MINIMAL);
-                options.getFpsLimit().setValue(30);
                 
                 String message = String.format(config.lowFPSText, currentFPS);
                 ToastHelper.showInfoToast(client, "AirExtra", message.replace("§e", ""));

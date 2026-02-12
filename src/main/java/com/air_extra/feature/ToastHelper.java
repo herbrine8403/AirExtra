@@ -52,7 +52,7 @@ public class ToastHelper {
             try {
                 SystemToast.show(
                     client.getToastManager(),
-                    SystemToast.Type.TUTORIAL_HINT,
+                    SystemToast.Type.PERIODIC_NOTIFICATION,
                     Text.literal(title),
                     Text.literal(message)
                 );

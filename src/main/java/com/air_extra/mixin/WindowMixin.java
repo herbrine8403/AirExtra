@@ -2,10 +2,10 @@ package com.air_extra.mixin;
 
 import com.air_extra.AirExtraClient;
 import com.air_extra.config.AirExtraConfig;
-import com.air_extra.feature.ScreenOrientationDetector;
 import com.air_extra.feature.ToastHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
+import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,8 +24,8 @@ public class WindowMixin {
     private int lastWidth = 0;
     private int lastHeight = 0;
     
-    @Inject(method = "updateWindowSize", at = @At("RETURN"))
-    private void onWindowSizeChanged(CallbackInfo ci) {
+    @Inject(method = "onFramebufferSizeChange", at = @At("RETURN"))
+    private void onWindowSizeChanged(long window, int width, int height, CallbackInfo ci) {
         if (lastWidth != width || lastHeight != height) {
             lastWidth = width;
             lastHeight = height;

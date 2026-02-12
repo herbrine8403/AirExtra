@@ -5,6 +5,8 @@ import com.air_extra.config.AirExtraConfig;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;
 
+import java.nio.IntBuffer;
+
 public class ScreenOrientationDetector {
     
     private static Boolean isPortraitMode = null;
@@ -14,13 +16,14 @@ public class ScreenOrientationDetector {
         
         try {
             long window = client.getWindow().getHandle();
-            int width = GLFW.glfwGetWindowSize(window)[0];
-            int height = GLFW.glfwGetWindowSize(window)[1];
+            int[] width = new int[1];
+            int[] height = new int[1];
+            GLFW.glfwGetWindowSize(window, width, height);
             
-            isPortraitMode = height > width;
+            isPortraitMode = height[0] > width[0];
             
             if (AirExtraClient.getConfig().enableDebugLogging) {
-                AirExtraClient.LOGGER.info("Screen Size: {}x{}, Portrait Mode: {}", width, height, isPortraitMode);
+                AirExtraClient.LOGGER.info("Screen Size: {}x{}, Portrait Mode: {}", width[0], height[0], isPortraitMode);
             }
             
             if (isPortraitMode) {
@@ -39,8 +42,10 @@ public class ScreenOrientationDetector {
     public static int[] getScreenSize(MinecraftClient client) {
         try {
             long window = client.getWindow().getHandle();
-            int[] size = GLFW.glfwGetWindowSize(window);
-            return new int[]{size[0], size[1]};
+            int[] width = new int[1];
+            int[] height = new int[1];
+            GLFW.glfwGetWindowSize(window, width, height);
+            return new int[]{width[0], height[0]};
         } catch (Exception e) {
             return new int[]{0, 0};
         }

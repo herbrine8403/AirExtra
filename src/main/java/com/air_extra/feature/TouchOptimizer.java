@@ -36,7 +36,6 @@ public class TouchOptimizer {
             
             options.getCloudRenderMode().setValue(net.minecraft.client.option.CloudRenderMode.OFF);
             options.getParticles().setValue(net.minecraft.client.option.ParticlesMode.MINIMAL);
-            options.getFpsLimit().setValue(config.targetFPS);
             
             optimized = true;
             
