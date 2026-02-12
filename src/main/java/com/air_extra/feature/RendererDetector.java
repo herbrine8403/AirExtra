@@ -2,6 +2,7 @@ package com.air_extra.feature;
 
 import com.air_extra.AirExtraClient;
 import com.air_extra.config.AirExtraConfig;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.opengl.GL11;
 
@@ -10,17 +11,42 @@ public class RendererDetector {
     private static boolean hasMobileGlues = false;
     private static String rendererInfo = "";
     private static boolean checked = false;
+    private static boolean registered = false;
+    private static int checkDelay = 0;
+    private static final int CHECK_DELAY_TICKS = 100;
     
-    public static void checkRenderer(MinecraftClient client, AirExtraConfig config) {
-        if (!config.isEnableRendererCheck() || checked) return;
+    public static void register() {
+        if (registered) return;
+        registered = true;
+        
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (checked) return;
+            
+            if (client.world != null && client.player != null) {
+                checkDelay++;
+                
+                if (checkDelay >= CHECK_DELAY_TICKS) {
+                    checkRenderer(client, AirExtraClient.getConfig());
+                }
+            } else {
+                checkDelay = 0;
+            }
+        });
+        
+        AirExtraClient.LOGGER.info("Renderer detector registered");
+    }
+    
+    public static void reset() {
+        checked = false;
+        checkDelay = 0;
+        hasMobileGlues = false;
+        rendererInfo = "";
+    }
+    
+    private static void checkRenderer(MinecraftClient client, AirExtraConfig config) {
+        if (checked || config == null || !config.isEnableRendererCheck()) return;
         
         checked = true;
-        
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
         
         try {
             String vendor = safeGetString(GL11.GL_VENDOR);
@@ -38,9 +64,7 @@ public class RendererDetector {
             AirExtraClient.LOGGER.info("Has MobileGlues: {}", hasMobileGlues);
             
             if (!hasMobileGlues) {
-                client.execute(() -> {
-                    ToastHelper.showWarningToast(client, config.rendererWarningText);
-                });
+                ToastHelper.showTimedWarningToast(client, config.rendererWarningText, 5);
             }
             
         } catch (Exception e) {

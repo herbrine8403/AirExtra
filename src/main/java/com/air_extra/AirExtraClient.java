@@ -31,6 +31,7 @@ public class AirExtraClient implements ClientModInitializer {
         LOGGER.info("AirExtra Client initialized");
         
         TickListener.register();
+        RendererDetector.register();
         
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             LOGGER.info("Minecraft client started, scheduling device detection...");
@@ -65,8 +66,6 @@ public class AirExtraClient implements ClientModInitializer {
         PerformanceMonitor.startMonitoring(client, config);
         ScreenOrientationDetector.startMonitoring(client, config);
         MemoryMonitor.checkMemoryAllocation(client, config);
-        
-        RendererDetector.checkRenderer(client, config);
         
         LOGGER.info("All monitoring systems started");
     }
