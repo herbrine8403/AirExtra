@@ -1,10 +1,13 @@
 package com.air_extra.config;
 
+import com.air_extra.AirExtraClient;
+import com.air_extra.feature.PerformanceMonitor;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
+import net.minecraft.client.MinecraftClient;
 
 @Config(name = "air_extra")
 public class AirExtraConfig implements ConfigData {
@@ -92,6 +95,10 @@ public class AirExtraConfig implements ConfigData {
     @ConfigEntry.Category("performance")
     public String restoreSettingsText = "§a已恢复优化前的游戏设置。";
     
+    @ConfigEntry.Category("performance")
+    @ConfigEntry.Gui.Tooltip
+    public boolean restoreSettings = false;
+    
     @ConfigEntry.Category("advanced")
     public boolean enableDebugLogging = false;
     
@@ -175,5 +182,23 @@ public class AirExtraConfig implements ConfigData {
     
     public int getMemoryCheckInterval() {
         return memoryCheckInterval;
+    }
+    
+    @Override
+    public void validatePostLoad() {
+        // 检查是否触发了恢复设置
+        if (restoreSettings) {
+            AirExtraClient.LOGGER.info("[AirExtraConfig] Restore settings triggered");
+            MinecraftClient client = MinecraftClient.getInstance();
+            if (client != null) {
+                if (PerformanceMonitor.hasBackup()) {
+                    PerformanceMonitor.restoreSettings(client);
+                } else {
+                    AirExtraClient.LOGGER.warn("[AirExtraConfig] No backup available to restore");
+                }
+            }
+            // 重置标志
+            restoreSettings = false;
+        }
     }
 }
