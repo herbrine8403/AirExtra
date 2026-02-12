@@ -8,8 +8,10 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 
 public class ModMenuIntegration implements ModMenuApi {
@@ -20,23 +22,18 @@ public class ModMenuIntegration implements ModMenuApi {
     }
     
     private Screen createConfigScreen(Screen parent) {
-        // 使用 AutoConfig 的基础屏幕
-        Screen baseScreen = AutoConfig.getConfigScreen(AirExtraConfig.class, parent).get();
+        AirExtraConfig config = AirExtraClient.getConfig();
         
-        // 创建自定义配置构建器
         ConfigBuilder builder = ConfigBuilder.create()
             .setParentScreen(parent)
             .setTitle(Text.translatable("text.autoconfig.air_extra.title"));
-        
-        // 复制 AutoConfig 的配置
-        AirExtraConfig config = AirExtraConfig.getConfig();
         
         ConfigEntryBuilder entryBuilder = builder.entryBuilder();
         
         // 创建性能优化分类
         ConfigCategory performanceCategory = builder.getOrCreateCategory(Text.translatable("text.autoconfig.air_extra.category.performance"));
         
-        // 添加恢复设置按钮
+        // 添加备份设置选项
         performanceCategory.addEntry(entryBuilder.startBooleanToggle(
                 Text.literal("启用设置备份"), 
                 config.enableSettingsBackup)
@@ -53,9 +50,9 @@ public class ModMenuIntegration implements ModMenuApi {
             .setTooltip(Text.literal("FPS过低时自动降低设置"))
             .build());
         
-        // 添加恢复按钮
+        // 分隔线
         performanceCategory.addEntry(entryBuilder.startTextDescription(
-                Text.literal("§7━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"))
+                Text.literal("§7━━━━━━ 设置恢复 ━━━━━━"))
             .build());
         
         // 显示备份状态
@@ -66,23 +63,41 @@ public class ModMenuIntegration implements ModMenuApi {
                 Text.literal(backupInfo))
             .build());
         
-        // 恢复按钮
-        performanceCategory.addEntry(entryBuilder.startButton(
-                Text.literal("§e[恢复优化前设置]"),
-                button -> {
-                    if (PerformanceMonitor.hasBackup()) {
-                        PerformanceMonitor.restoreSettings(MinecraftClient.getInstance());
-                        button.setMessage(Text.literal("§a[已恢复设置]"));
-                    } else {
-                        button.setMessage(Text.literal("§c[无可用备份]"));
-                    }
-                })
-            .setTooltip(Text.literal("恢复自动优化前的游戏设置（视距、云、粒子）"))
+        // 使用 SubCategory 添加恢复按钮区域
+        SubCategoryBuilder restoreSubCategory = entryBuilder.startSubCategory(Text.literal("恢复操作"));
+        restoreSubCategory.add(entryBuilder.startTextDescription(
+                Text.literal("§7点击下方按钮恢复优化前的游戏设置"))
             .build());
+        performanceCategory.addEntry(restoreSubCategory.build());
         
         // 设置保存监听器
         builder.setSavingRunnable(() -> {
             config.save();
+        });
+        
+        // 在屏幕底部添加恢复按钮
+        builder.setAfterInitConsumer(screen -> {
+            // 添加恢复按钮到屏幕
+            int buttonWidth = 150;
+            int buttonHeight = 20;
+            int centerX = screen.width / 2 - buttonWidth / 2;
+            int buttonY = screen.height - 35;
+            
+            ButtonWidget restoreButton = ButtonWidget.builder(
+                Text.literal("§e[恢复优化前设置]"),
+                button -> {
+                    if (PerformanceMonitor.hasBackup()) {
+                        PerformanceMonitor.restoreSettings(MinecraftClient.getInstance());
+                    } else {
+                        // 如果没有备份，显示提示
+                        button.setMessage(Text.literal("§c[无可用备份]"));
+                    }
+                }
+            ).dimensions(centerX - 80, buttonY, buttonWidth, buttonHeight)
+             .tooltip(Text.literal("恢复自动优化前的游戏设置（视距、云、粒子）"))
+             .build();
+            
+            screen.addDrawableChild(restoreButton);
         });
         
         return builder.build();
