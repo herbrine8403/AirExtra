@@ -31,14 +31,11 @@ public class RendererDetector {
                 vendor, renderer, version);
             
             String combinedInfo = (vendor + " " + renderer + " " + version).toLowerCase();
-            hasMobileGlues = combinedInfo.contains("mobileglues") || 
-                            combinedInfo.contains("moltenvk") ||
-                            combinedInfo.contains("zink") ||
-                            combinedInfo.contains("angle");
+            hasMobileGlues = combinedInfo.contains("mobileglues");
             
             AirExtraClient.LOGGER.info("Renderer detection completed");
             AirExtraClient.LOGGER.info("Renderer Info: {}", rendererInfo);
-            AirExtraClient.LOGGER.info("Has MobileGlues or compatible renderer: {}", hasMobileGlues);
+            AirExtraClient.LOGGER.info("Has MobileGlues: {}", hasMobileGlues);
             
             if (!hasMobileGlues) {
                 client.execute(() -> {
