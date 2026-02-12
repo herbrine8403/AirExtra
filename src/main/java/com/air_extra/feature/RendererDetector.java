@@ -70,38 +70,46 @@ public class RendererDetector {
         
         AirExtraClient.LOGGER.info("[RendererDetector] Starting renderer detection...");
         
-        // 尝试获取 Minecraft 窗口句柄
-        long windowHandle = 0;
+        // 记录当前上下文状态用于调试
+        long glfwContext = GLFW.glfwGetCurrentContext();
+        long mcWindowHandle = 0;
         try {
             if (client.getWindow() != null) {
-                windowHandle = client.getWindow().getHandle();
-                AirExtraClient.LOGGER.debug("[RendererDetector] Minecraft window handle: {}", windowHandle);
+                mcWindowHandle = client.getWindow().getHandle();
             }
         } catch (Exception e) {
-            AirExtraClient.LOGGER.warn("[RendererDetector] Failed to get window handle: {}", e.getMessage());
+            AirExtraClient.LOGGER.debug("[RendererDetector] Failed to get MC window handle: {}", e.getMessage());
         }
         
-        // 也检查 GLFW 当前上下文
-        long glfwContext = GLFW.glfwGetCurrentContext();
-        AirExtraClient.LOGGER.debug("[RendererDetector] GLFW current context: {}", glfwContext);
+        AirExtraClient.LOGGER.debug("[RendererDetector] GLFW context: {}, MC window: {}", glfwContext, mcWindowHandle);
         
-        // 使用 Minecraft 窗口或 GLFW 上下文
-        boolean hasValidContext = (windowHandle != 0) || (glfwContext != 0);
+        // 直接尝试获取 GL 字符串，如果失败则推迟检测
+        String vendor;
+        String renderer;
+        String version;
         
-        if (!hasValidContext) {
-            AirExtraClient.LOGGER.warn("[RendererDetector] No valid OpenGL context available, postponing check");
-            // 不标记为已检查，下次再尝试
+        try {
+            vendor = GL11.glGetString(GL11.GL_VENDOR);
+            renderer = GL11.glGetString(GL11.GL_RENDERER);
+            version = GL11.glGetString(GL11.GL_VERSION);
+            
+            // 检查是否成功获取到有效数据
+            if (vendor == null && renderer == null && version == null) {
+                AirExtraClient.LOGGER.warn("[RendererDetector] GL strings returned null, OpenGL context may not be ready");
+                return;
+            }
+        } catch (Exception e) {
+            AirExtraClient.LOGGER.warn("[RendererDetector] OpenGL call failed, context not ready: {}", e.getMessage());
             return;
         }
         
         checked = true;
         
         try {
-            AirExtraClient.LOGGER.debug("[RendererDetector] Querying OpenGL strings...");
-            
-            String vendor = safeGetString(GL11.GL_VENDOR);
-            String renderer = safeGetString(GL11.GL_RENDERER);
-            String version = safeGetString(GL11.GL_VERSION);
+            // 使用 safeGetString 进行详细日志记录
+            vendor = safeGetString(GL11.GL_VENDOR);
+            renderer = safeGetString(GL11.GL_RENDERER);
+            version = safeGetString(GL11.GL_VERSION);
             
             AirExtraClient.LOGGER.info("[RendererDetector] Raw GL strings - Vendor: '{}', Renderer: '{}', Version: '{}'", 
                 vendor, renderer, version);
