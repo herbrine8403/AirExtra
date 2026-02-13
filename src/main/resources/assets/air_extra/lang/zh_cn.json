@@ -5,7 +5,7 @@
   "text.autoconfig.air_extra.category.memory": "内存",
   "text.autoconfig.air_extra.category.renderer": "渲染器",
   "text.autoconfig.air_extra.category.display": "显示",
-  "text.autoconfig.air_extra.category.network": "网络",
+  "text.autoconfig.air_extra.category.network": "TouchController",
   "text.autoconfig.air_extra.category.performance": "性能",
   "text.autoconfig.air_extra.category.backup": "备份恢复",
   "text.autoconfig.air_extra.category.advanced": "高级",
