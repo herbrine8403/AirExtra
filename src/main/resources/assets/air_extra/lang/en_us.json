@@ -1,0 +1,71 @@
+{
+  "air_extra.title": "AirExtra Config",
+  
+  "text.autoconfig.air_extra.category.general": "General",
+  "text.autoconfig.air_extra.category.memory": "Memory",
+  "text.autoconfig.air_extra.category.renderer": "Renderer",
+  "text.autoconfig.air_extra.category.display": "Display",
+  "text.autoconfig.air_extra.category.network": "Network",
+  "text.autoconfig.air_extra.category.performance": "Performance",
+  "text.autoconfig.air_extra.category.backup": "Backup & Restore",
+  "text.autoconfig.air_extra.category.advanced": "Advanced",
+  
+  "text.autoconfig.air_extra.option.modEnabled": "Enable Mod",
+  "text.autoconfig.air_extra.option.modEnabled.@Tooltip": "Fully enable or disable AirExtra mod",
+  "text.autoconfig.air_extra.option.initialized": "Initialized",
+  
+  "text.autoconfig.air_extra.option.enableMemoryWarning": "Enable Memory Warning",
+  "text.autoconfig.air_extra.option.enableMemoryWarning.@Tooltip": "Show warning when available memory is low",
+  "text.autoconfig.air_extra.option.memoryWarningThreshold": "Memory Warning Threshold (MB)",
+  "text.autoconfig.air_extra.option.memoryWarningThreshold.@Tooltip": "Trigger warning when available memory falls below this value",
+  "text.autoconfig.air_extra.option.memoryWarningText": "Memory Warning Text",
+  "text.autoconfig.air_extra.option.enableMemoryAllocationCheck": "Enable Memory Allocation Check",
+  "text.autoconfig.air_extra.option.enableMemoryAllocationCheck.@Tooltip": "Check if allocated memory is sufficient",
+  "text.autoconfig.air_extra.option.minMemoryAllocation": "Minimum Memory Allocation (MB)",
+  "text.autoconfig.air_extra.option.minMemoryAllocation.@Tooltip": "Recommended minimum memory allocation",
+  "text.autoconfig.air_extra.option.memoryAllocationWarningText": "Memory Allocation Warning Text",
+  
+  "text.autoconfig.air_extra.option.enableRendererCheck": "Enable Renderer Check",
+  "text.autoconfig.air_extra.option.enableRendererCheck.@Tooltip": "Check if using recommended renderer",
+  "text.autoconfig.air_extra.option.rendererWarningText": "Renderer Warning Text",
+  
+  "text.autoconfig.air_extra.option.enablePortraitCheck": "Enable Portrait Detection",
+  "text.autoconfig.air_extra.option.enablePortraitCheck.@Tooltip": "Detect portrait mode and show warning",
+  "text.autoconfig.air_extra.option.portraitWarningText": "Portrait Warning Text",
+  
+  "text.autoconfig.air_extra.option.enableUDPListener": "Enable UDP Listener",
+  "text.autoconfig.air_extra.option.enableUDPListener.@Tooltip": "Listen for communications from launcher",
+  "text.autoconfig.air_extra.option.udpPort": "UDP Port",
+  "text.autoconfig.air_extra.option.udpTimeoutMinutes": "UDP Timeout (minutes)",
+  "text.autoconfig.air_extra.option.touchControllerWarningText": "TouchController Warning Text",
+  
+  "text.autoconfig.air_extra.option.enablePerformanceMonitor": "Enable Performance Monitor",
+  "text.autoconfig.air_extra.option.enablePerformanceMonitor.@Tooltip": "Monitor FPS and auto-optimize",
+  "text.autoconfig.air_extra.option.targetFPS": "Target FPS",
+  "text.autoconfig.air_extra.option.targetFPS.@Tooltip": "Desired frame rate target",
+  "text.autoconfig.air_extra.option.enableAutoFPSLimit": "Enable Auto FPS Limit",
+  "text.autoconfig.air_extra.option.enableTouchOptimization": "Enable Touch Optimization",
+  "text.autoconfig.air_extra.option.enableChunkOptimization": "Enable Chunk Optimization",
+  "text.autoconfig.air_extra.option.enableRenderDistanceOptimization": "Enable Render Distance Optimization",
+  "text.autoconfig.air_extra.option.maxRenderDistance": "Max Render Distance",
+  "text.autoconfig.air_extra.option.maxRenderDistance.@Tooltip": "Maximum render distance limit during auto-optimization",
+  "text.autoconfig.air_extra.option.lowFPSText": "Low FPS Warning Text",
+  
+  "text.autoconfig.air_extra.option.enableSettingsBackup": "Enable Settings Backup",
+  "text.autoconfig.air_extra.option.enableSettingsBackup.@Tooltip": "Backup game settings before auto-optimization",
+  "text.autoconfig.air_extra.option.restoreSettings": "Restore Previous Settings",
+  "text.autoconfig.air_extra.option.restoreSettings.@Tooltip": "Check this to restore previously backed up game settings",
+  
+  "text.autoconfig.air_extra.option.enableDebugLogging": "Enable Debug Logging",
+  "text.autoconfig.air_extra.option.enableDebugLogging.@Tooltip": "Output detailed debug information to log",
+  "text.autoconfig.air_extra.option.memoryCheckInterval": "Memory Check Interval (ticks)",
+  "text.autoconfig.air_extra.option.memoryCheckInterval.@Tooltip": "Frequency of memory checks (20 ticks = 1 second)",
+  "text.autoconfig.air_extra.option.enableBatteryMonitor": "Enable Battery Monitor",
+  "text.autoconfig.air_extra.option.lowBatteryText": "Low Battery Warning Text",
+  
+  "air_extra.backup.title": "Settings Backup & Restore",
+  "air_extra.backup.info": "Current Backup Info:",
+  "air_extra.backup.no_backup": "No backup available",
+  "air_extra.backup.restore_hint": "Check the option below to restore pre-optimization game settings",
+  "air_extra.toast.title": "AirExtra"
+}

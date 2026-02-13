@@ -12,12 +12,14 @@ import net.minecraft.client.MinecraftClient;
 @Config(name = "air_extra")
 public class AirExtraConfig implements ConfigData {
     
+    // ==================== General ====================
     @ConfigEntry.Category("general")
     public boolean modEnabled = true;
     
     @ConfigEntry.Category("general")
     public boolean initialized = false;
     
+    // ==================== Memory ====================
     @ConfigEntry.Category("memory")
     public boolean enableMemoryWarning = true;
     
@@ -38,12 +40,21 @@ public class AirExtraConfig implements ConfigData {
     @ConfigEntry.Category("memory")
     public String memoryAllocationWarningText = "§c警告：游戏分配内存不足 %dMB，建议增加内存分配！";
     
+    // ==================== Renderer ====================
     @ConfigEntry.Category("renderer")
     public boolean enableRendererCheck = true;
     
     @ConfigEntry.Category("renderer")
     public String rendererWarningText = "§c检测到您未使用MobileGlues渲染器，可能会导致游戏崩溃，建议切换为MobileGlues渲染器进行游戏。";
     
+    // ==================== Display ====================
+    @ConfigEntry.Category("display")
+    public boolean enablePortraitCheck = true;
+    
+    @ConfigEntry.Category("display")
+    public String portraitWarningText = "§c检测到您正在使用竖屏模式，建议切换为横屏以获得最佳游戏体验！";
+    
+    // ==================== Network ====================
     @ConfigEntry.Category("network")
     public boolean enableUDPListener = true;
     
@@ -57,12 +68,7 @@ public class AirExtraConfig implements ConfigData {
     @ConfigEntry.Category("network")
     public String touchControllerWarningText = "§cTouchController未安装或已被禁用";
     
-    @ConfigEntry.Category("display")
-    public boolean enablePortraitCheck = true;
-    
-    @ConfigEntry.Category("display")
-    public String portraitWarningText = "§c检测到您正在使用竖屏模式，建议切换为横屏以获得最佳游戏体验！";
-    
+    // ==================== Performance ====================
     @ConfigEntry.Category("performance")
     public boolean enablePerformanceMonitor = true;
     
@@ -89,16 +95,16 @@ public class AirExtraConfig implements ConfigData {
     @ConfigEntry.Category("performance")
     public String lowFPSText = "§e检测到FPS较低 (%d)，已自动优化部分设置。";
     
-    @ConfigEntry.Category("performance")
+    // ==================== Backup ====================
+    @ConfigEntry.Category("backup")
     public boolean enableSettingsBackup = true;
     
-    @ConfigEntry.Category("performance")
-    public String restoreSettingsText = "§a已恢复优化前的游戏设置。";
-    
-    @ConfigEntry.Category("performance")
+    @ConfigEntry.Category("backup")
     @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.Gui.PrefixText
     public boolean restoreSettings = false;
     
+    // ==================== Advanced ====================
     @ConfigEntry.Category("advanced")
     public boolean enableDebugLogging = false;
     
@@ -186,7 +192,6 @@ public class AirExtraConfig implements ConfigData {
     
     @Override
     public void validatePostLoad() {
-        // 检查是否触发了恢复设置
         if (restoreSettings) {
             AirExtraClient.LOGGER.info("[AirExtraConfig] Restore settings triggered");
             MinecraftClient client = MinecraftClient.getInstance();
@@ -197,8 +202,8 @@ public class AirExtraConfig implements ConfigData {
                     AirExtraClient.LOGGER.warn("[AirExtraConfig] No backup available to restore");
                 }
             }
-            // 重置标志
             restoreSettings = false;
+            save();
         }
     }
 }

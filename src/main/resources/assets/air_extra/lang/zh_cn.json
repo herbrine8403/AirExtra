@@ -1,0 +1,71 @@
+{
+  "air_extra.title": "AirExtra 配置",
+  
+  "text.autoconfig.air_extra.category.general": "通用",
+  "text.autoconfig.air_extra.category.memory": "内存",
+  "text.autoconfig.air_extra.category.renderer": "渲染器",
+  "text.autoconfig.air_extra.category.display": "显示",
+  "text.autoconfig.air_extra.category.network": "网络",
+  "text.autoconfig.air_extra.category.performance": "性能",
+  "text.autoconfig.air_extra.category.backup": "备份恢复",
+  "text.autoconfig.air_extra.category.advanced": "高级",
+  
+  "text.autoconfig.air_extra.option.modEnabled": "启用模组",
+  "text.autoconfig.air_extra.option.modEnabled.@Tooltip": "完全启用或禁用 AirExtra 模组",
+  "text.autoconfig.air_extra.option.initialized": "已初始化",
+  
+  "text.autoconfig.air_extra.option.enableMemoryWarning": "启用内存警告",
+  "text.autoconfig.air_extra.option.enableMemoryWarning.@Tooltip": "当剩余内存过低时显示警告",
+  "text.autoconfig.air_extra.option.memoryWarningThreshold": "内存警告阈值 (MB)",
+  "text.autoconfig.air_extra.option.memoryWarningThreshold.@Tooltip": "剩余内存低于此值时触发警告",
+  "text.autoconfig.air_extra.option.memoryWarningText": "内存警告文本",
+  "text.autoconfig.air_extra.option.enableMemoryAllocationCheck": "启用内存分配检查",
+  "text.autoconfig.air_extra.option.enableMemoryAllocationCheck.@Tooltip": "检查游戏分配的内存是否足够",
+  "text.autoconfig.air_extra.option.minMemoryAllocation": "最小内存分配 (MB)",
+  "text.autoconfig.air_extra.option.minMemoryAllocation.@Tooltip": "推荐的最低内存分配量",
+  "text.autoconfig.air_extra.option.memoryAllocationWarningText": "内存分配警告文本",
+  
+  "text.autoconfig.air_extra.option.enableRendererCheck": "启用渲染器检查",
+  "text.autoconfig.air_extra.option.enableRendererCheck.@Tooltip": "检测是否使用推荐的渲染器",
+  "text.autoconfig.air_extra.option.rendererWarningText": "渲染器警告文本",
+  
+  "text.autoconfig.air_extra.option.enablePortraitCheck": "启用竖屏检测",
+  "text.autoconfig.air_extra.option.enablePortraitCheck.@Tooltip": "检测竖屏模式并发出警告",
+  "text.autoconfig.air_extra.option.portraitWarningText": "竖屏警告文本",
+  
+  "text.autoconfig.air_extra.option.enableUDPListener": "启用 UDP 监听器",
+  "text.autoconfig.air_extra.option.enableUDPListener.@Tooltip": "监听来自启动器的通信",
+  "text.autoconfig.air_extra.option.udpPort": "UDP 端口",
+  "text.autoconfig.air_extra.option.udpTimeoutMinutes": "UDP 超时 (分钟)",
+  "text.autoconfig.air_extra.option.touchControllerWarningText": "TouchController 警告文本",
+  
+  "text.autoconfig.air_extra.option.enablePerformanceMonitor": "启用性能监控",
+  "text.autoconfig.air_extra.option.enablePerformanceMonitor.@Tooltip": "监控 FPS 并自动优化",
+  "text.autoconfig.air_extra.option.targetFPS": "目标 FPS",
+  "text.autoconfig.air_extra.option.targetFPS.@Tooltip": "期望的帧率目标",
+  "text.autoconfig.air_extra.option.enableAutoFPSLimit": "启用自动 FPS 限制",
+  "text.autoconfig.air_extra.option.enableTouchOptimization": "启用触摸优化",
+  "text.autoconfig.air_extra.option.enableChunkOptimization": "启用区块优化",
+  "text.autoconfig.air_extra.option.enableRenderDistanceOptimization": "启用视距优化",
+  "text.autoconfig.air_extra.option.maxRenderDistance": "最大视距",
+  "text.autoconfig.air_extra.option.maxRenderDistance.@Tooltip": "自动优化时的最大视距限制",
+  "text.autoconfig.air_extra.option.lowFPSText": "低 FPS 警告文本",
+  
+  "text.autoconfig.air_extra.option.enableSettingsBackup": "启用设置备份",
+  "text.autoconfig.air_extra.option.enableSettingsBackup.@Tooltip": "在自动优化前备份游戏设置",
+  "text.autoconfig.air_extra.option.restoreSettings": "恢复优化前的设置",
+  "text.autoconfig.air_extra.option.restoreSettings.@Tooltip": "勾选此项将恢复之前备份的游戏设置",
+  
+  "text.autoconfig.air_extra.option.enableDebugLogging": "启用调试日志",
+  "text.autoconfig.air_extra.option.enableDebugLogging.@Tooltip": "输出详细的调试信息到日志",
+  "text.autoconfig.air_extra.option.memoryCheckInterval": "内存检查间隔 (tick)",
+  "text.autoconfig.air_extra.option.memoryCheckInterval.@Tooltip": "内存检查的频率 (20 tick = 1秒)",
+  "text.autoconfig.air_extra.option.enableBatteryMonitor": "启用电量监控",
+  "text.autoconfig.air_extra.option.lowBatteryText": "低电量警告文本",
+  
+  "air_extra.backup.title": "设置备份恢复",
+  "air_extra.backup.info": "当前备份信息：",
+  "air_extra.backup.no_backup": "暂无可用备份",
+  "air_extra.backup.restore_hint": "勾选下方的选项可恢复优化前的游戏设置",
+  "air_extra.toast.title": "AirExtra"
+}
