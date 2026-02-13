@@ -11,7 +11,7 @@ public class ScreenOrientationDetector {
     private static boolean hasShownWarning = false;
     private static long lastWarningTime = 0;
     private static final long WARNING_COOLDOWN = 60000;
-    private static boolean firstCheck = true;
+    private static boolean hadPlayer = false;  // 跟踪之前是否有 player
     
     public static void startMonitoring(MinecraftClient client, AirExtraConfig config) {
         if (!config.isEnablePortraitCheck()) {
@@ -23,7 +23,7 @@ public class ScreenOrientationDetector {
         
         hasShownWarning = false;
         lastWarningTime = 0;
-        firstCheck = true;
+        hadPlayer = false;
         isPortraitMode = null;
         
         checkOrientation(client, config);
@@ -40,27 +40,35 @@ public class ScreenOrientationDetector {
             
             boolean currentIsPortrait = height[0] > width[0];
             boolean wasPortrait = isPortraitMode != null && isPortraitMode;
+            boolean hasPlayer = client.player != null;
             
-            AirExtraClient.LOGGER.info("Screen size: {}x{}, Portrait: {}, wasPortrait: {}, firstCheck: {}, player: {}", 
-                width[0], height[0], currentIsPortrait, wasPortrait, firstCheck, client.player != null);
+            AirExtraClient.LOGGER.info("Screen size: {}x{}, Portrait: {}, wasPortrait: {}, hasPlayer: {}, hadPlayer: {}, hasShownWarning: {}", 
+                width[0], height[0], currentIsPortrait, wasPortrait, hasPlayer, hadPlayer, hasShownWarning);
             
-            // 只在状态变化或首次检测时处理
-            boolean stateChanged = (isPortraitMode == null) || (isPortraitMode != currentIsPortrait);
+            // 状态变化检测
+            boolean orientationChanged = (isPortraitMode == null) || (isPortraitMode != currentIsPortrait);
+            boolean playerJustJoined = hasPlayer && !hadPlayer;  // player 刚进入世界
             
-            if (stateChanged) {
+            if (orientationChanged) {
                 AirExtraClient.LOGGER.info("Portrait state changed: {} -> {}", isPortraitMode, currentIsPortrait);
             }
             
+            if (playerJustJoined) {
+                AirExtraClient.LOGGER.info("Player just joined the world");
+            }
+            
             isPortraitMode = currentIsPortrait;
+            hadPlayer = hasPlayer;
             
             // 竖屏模式下显示警告
-            if (isPortraitMode && client.player != null) {
+            if (isPortraitMode && hasPlayer) {
                 long currentTime = System.currentTimeMillis();
                 
-                // 状态变化（从横屏到竖屏）或首次检测到竖屏时重置警告
-                if (stateChanged || firstCheck) {
+                // 方向变化、player 刚进入世界时重置警告
+                if (orientationChanged || playerJustJoined) {
                     hasShownWarning = false;
-                    AirExtraClient.LOGGER.info("Reset warning flag due to state change or first check");
+                    AirExtraClient.LOGGER.info("Reset warning flag (orientationChanged={}, playerJustJoined={})", 
+                        orientationChanged, playerJustJoined);
                 }
                 
                 // 显示警告
@@ -70,13 +78,11 @@ public class ScreenOrientationDetector {
                     hasShownWarning = true;
                     lastWarningTime = currentTime;
                 }
-            } else if (!isPortraitMode && stateChanged) {
+            } else if (!isPortraitMode && orientationChanged) {
                 // 切换到横屏时重置警告状态
                 hasShownWarning = false;
                 AirExtraClient.LOGGER.info("Switched to landscape, reset warning flag");
             }
-            
-            firstCheck = false;
             
         } catch (Exception e) {
             AirExtraClient.LOGGER.warn("Screen orientation check failed: {}", e.getMessage());
